@@ -1,0 +1,9 @@
+Informacje o czujniku:
+- wsp. geograficzne
+- wysokość n.p.m
+Wysyłane dane:
+- pm2.5
+- pm10
+- temperatura
+- wilgotność
+- ciśnienie atmosferyczne (opcjonalnie)

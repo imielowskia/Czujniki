@@ -53,7 +53,6 @@ class Sensor
         $wspolrzedne = $data['wspolrzedne'];
         $wysokosc_npm = $data['wysokosc_npm'];
         $id_czujnik = $data['id_czujnik'];
-        // UPDATE `rejestr_czujnikow` SET `nazwa` = 'Nazwa1', `wspolrzedne` = 'Wspo' WHERE `rejestr_czujnikow`.`id_czujnika` = 1;
 
         if (!empty($id_czujnik)) {
             if (!empty($nazwa)) {

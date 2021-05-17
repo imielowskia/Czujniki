@@ -39,7 +39,7 @@
                         <input type="text" name="nazwa" class="form-control" placeholder="Nazwa"><br>
                         <input type="text" name="opis" class="form-control" placeholder="Opis"><br>
                         <input type="text" name="wspolrzedne" class="form-control" placeholder="Współrzędne"><br>
-                        <input type="text" name="wysokosc_npm" class="form-control" placeholder="Wysokość npm."><br>
+                        <input type="number" step="any" name="wysokosc_npm" class="form-control" placeholder="Wysokość npm."><br>
 
                         <button type="submit" class="btn btn-primary">Dodaj</button>
                     </form>
@@ -63,7 +63,7 @@
                         <input type="text" name="edit_nazwa" class="form-control" placeholder="Nazwa"><br>
                         <input type="text" name="edit_opis" class="form-control" placeholder="Opis"><br>
                         <input type="text" name="edit_wspolrzedne" class="form-control" placeholder="Współrzędne"><br>
-                        <input type="text" name="edit_wysokosc_npm" class="form-control" placeholder="Wysokość npm."><br>
+                        <input type="number" step="any" name="edit_wysokosc_npm" class="form-control" placeholder="Wysokość npm."><br>
 
                         <button type="submit" class="btn btn-primary">Edytuj</button>
                     </form>

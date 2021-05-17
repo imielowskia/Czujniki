@@ -59,7 +59,7 @@
             <div class="col">
                 <h3>Edytowanie czujnika</h1>
                     <form action=" <?= ROOT_PATH ?>sensors/editSensor" method="POST" class="mb-3">
-                        <input type="text" name="edit_id_czujnik" class="form-control" placeholder="ID czujnika"><br>
+                        <input type="number" name="edit_id_czujnik" class="form-control" placeholder="ID czujnika"><br>
                         <input type="text" name="edit_nazwa" class="form-control" placeholder="Nazwa"><br>
                         <input type="text" name="edit_opis" class="form-control" placeholder="Opis"><br>
                         <input type="text" name="edit_wspolrzedne" class="form-control" placeholder="Współrzędne"><br>

@@ -11,13 +11,13 @@ CREATE TABLE czujniki.rejestr_czujnikow (
   PRIMARY KEY (id_czujnika)
 );
 
-CREATE TABLE czujniki.dane_czujnikow (
+CREATE TABLE czujniki.dane_dzienne (
   id_czujnika int NOT NULL,
+  data datetime NOT NULL,
   pm2_5 float NOT NULL,
   pm10 float NOT NULL,
   wilgotnosc float NOT NULL,
   temperatura float NOT NULL,
-  cisnienie_atmosferyczne float NOT NULL,
   FOREIGN KEY (id_czujnika) REFERENCES czujniki.rejestr_czujnikow(id_czujnika)
 );
 
@@ -36,12 +36,12 @@ DELETE FROM czujniki.rejestr_czujnikow WHERE id_czujnika=1;
 /* -------------------------------------------------- */
 
 
-/* Wstawianie przykładowych danych do tabeli dane_czujnikow */
-INSERT INTO czujniki.dane_czujnikow (id_czujnika, pm2_5, pm10, wilgotnosc, temperatura, cisnienie_atmosferyczne) 
-VALUES ('1', '10.5', '20.5', '30.5', '25.0', '12.9');
+/* Wstawianie przykładowych danych do tabeli dane_dzienne */
+INSERT INTO czujniki.dane_dzienne (id_czujnika, data, pm2_5, pm10, wilgotnosc, temperatura) 
+VALUES ('1', '2021-05-19 17:31:51', '10.5', '20.5', '30.5', '25.0');
 
-/* Usuwanie z tabeli dane_czujnikow po id */
-DELETE FROM czujniki.dane_czujnikow WHERE id_czujnika=1;
+/* Usuwanie z tabeli dane_dzienne po id */
+DELETE FROM czujniki.dane_dzienne WHERE id_czujnika=1;
 
 
 /* -------------------------------------------------- */
@@ -50,5 +50,5 @@ DELETE FROM czujniki.dane_czujnikow WHERE id_czujnika=1;
 /* Pobieranie pola nazwa z tabeli rejestr_czujnikow po jego id */
 SELECT czujniki.rejestr_czujnikow.nazwa FROM czujniki.rejestr_czujnikow WHERE czujniki.rejestr_czujnikow.id_czujnika=1;
 
-/* Pobieranie pola wilgotnosc z tabeli dane_czujnikow po jego id */
-SELECT czujniki.dane_czujnikow.wilgotnosc FROM czujniki.dane_czujnikow WHERE czujniki.dane_czujnikow.id_czujnika=1;
+/* Pobieranie pola wilgotnosc z tabeli dane_dzienne po jego id */
+SELECT czujniki.dane_dzienne.wilgotnosc FROM czujniki.dane_dzienne WHERE czujniki.dane_dzienne.id_czujnika=1;

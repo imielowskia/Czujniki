@@ -65,7 +65,7 @@
                         <input type="text" name="edit_wspolrzedne" class="form-control" placeholder="Współrzędne"><br>
                         <input type="text" name="edit_wysokosc_npm" class="form-control" placeholder="Wysokość npm."><br>
 
-                        <button type="submit" class="btn btn-primary">Dodaj</button>
+                        <button type="submit" class="btn btn-primary">Edytuj</button>
                     </form>
             </div>
         </div>

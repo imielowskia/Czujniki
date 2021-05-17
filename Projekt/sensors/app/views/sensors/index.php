@@ -34,7 +34,7 @@
         <div class="row align-items-start p-4">
             <!-- Wyświetla formularz tworzenia nowego czujnika -->
             <div class="col">
-                <h3>Nowy czujnik</h1>
+                <h3>Dodawanie czujnika</h1>
                     <form action=" <?= ROOT_PATH ?>sensors/addSensor" method="POST" class="mb-3">
                         <input type="text" name="nazwa" class="form-control" placeholder="Nazwa"><br>
                         <input type="text" name="opis" class="form-control" placeholder="Opis"><br>
@@ -47,11 +47,25 @@
 
             <!-- Wyświetla formularz usuwania czujnika -->
             <div class="col">
-                <h3>Usuń czujnik</h1>
+                <h3>Usuwanie czujnika</h1>
                     <form action="<?= ROOT_PATH ?>sensors/deleteSensor" method="POST">
                         <input type="number" name="id_czujnik" class="form-control" placeholder="ID czujnika"><br>
 
                         <button type="submit" class="btn btn-primary">Usuń</button>
+                    </form>
+            </div>
+
+            <!-- Wyświetla formularz edycji czujnika -->
+            <div class="col">
+                <h3>Edytowanie czujnika</h1>
+                    <form action=" <?= ROOT_PATH ?>sensors/editSensor" method="POST" class="mb-3">
+                        <input type="text" name="edit_id_czujnik" class="form-control" placeholder="ID czujnika"><br>
+                        <input type="text" name="edit_nazwa" class="form-control" placeholder="Nazwa"><br>
+                        <input type="text" name="edit_opis" class="form-control" placeholder="Opis"><br>
+                        <input type="text" name="edit_wspolrzedne" class="form-control" placeholder="Współrzędne"><br>
+                        <input type="text" name="edit_wysokosc_npm" class="form-control" placeholder="Wysokość npm."><br>
+
+                        <button type="submit" class="btn btn-primary">Dodaj</button>
                     </form>
             </div>
         </div>

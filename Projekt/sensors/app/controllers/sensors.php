@@ -41,4 +41,17 @@ class Sensors extends Controller
     {
         $this->model->printSensorsTable();
     }
+
+    public function editSensor()
+    {
+        $data = [
+            'nazwa' => trim($_POST['edit_nazwa']),
+            'opis' => trim($_POST['edit_opis']),
+            'wspolrzedne' => trim($_POST['edit_wspolrzedne']),
+            'wysokosc_npm' => trim($_POST['edit_wysokosc_npm']),
+            'id_czujnik' => trim($_POST['edit_id_czujnik'])
+        ];
+
+        $this->model->editSensor($data);
+    }
 }

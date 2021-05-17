@@ -45,6 +45,40 @@ class Sensor
         } else echo "Pole nie może być puste";
     }
 
+    public function editSensor($data)
+    {
+        $parametry = "";
+        $nazwa = $data['nazwa'];
+        $opis = $data['opis'];
+        $wspolrzedne = $data['wspolrzedne'];
+        $wysokosc_npm = $data['wysokosc_npm'];
+        $id_czujnik = $data['id_czujnik'];
+        // UPDATE `rejestr_czujnikow` SET `nazwa` = 'Nazwa1', `wspolrzedne` = 'Wspo' WHERE `rejestr_czujnikow`.`id_czujnika` = 1;
+
+        if (!empty($id_czujnik)) {
+            if (!empty($nazwa)) {
+                $parametry .= "nazwa = \"" . $nazwa . "\",";
+            }
+
+            if (!empty($opis)) {
+                $parametry .= "opis = \"" . $opis . "\",";
+            }
+
+            if (!empty($wspolrzedne)) {
+                $parametry .= "wspolrzedne = \"" . $wspolrzedne . "\",";
+            }
+
+            if (!empty($wysokosc_npm)) {
+                $parametry .= "wysokosc_npm = " . $wysokosc_npm . ",";
+            }
+
+            $query = "UPDATE czujniki.rejestr_czujnikow SET " . substr($parametry, 0, -1) . " WHERE rejestr_czujnikow.id_czujnika = " . $id_czujnik . ";";
+            $this->database->runQuery($query);
+
+            header('Location: ' . ROOT_PATH . 'sensors');
+        } else echo "Pole nie może być puste";
+    }
+
     public function printSensorsTable()
     {
         $query = "SELECT * FROM czujniki.rejestr_czujnikow";

@@ -1,22 +1,53 @@
 <?php
 
+use InfluxDB2\Client;
+
 class Sensor
 {
     private $database;
+    private $client;
+    private $bucket;
 
     public function __construct()
     {
+        // Connecting the mySQL database
         $dbhost = 'localhost';
         $dbuser = 'root';
         $dbpass = '';
         $dbname = 'czujniki';
 
         $this->database = new Database($dbhost, $dbuser, $dbpass, $dbname);
+
+        // Connecting the influx database
+        $token = 'uFBkGDJmzZRI1VQBKRgSlAsScRyhHamHmSopRDy2fFsANkEisxLUhGaAUcl0pkdJl6jYNX27_qdm2XXUa0EjnA==';
+        $org = 'IIT';
+        $this->bucket = 'Czujniki';
+
+        $this->client = new Client([
+            "url" => "http://89.188.221.231:8086",
+            "token" => $token,
+            "org" => $org,
+            "bucket" => $this->bucket
+        ]);
     }
 
     public function getDatabase()
     {
         return $this->database;
+    }
+
+    public function getCurrentInfluxParameter($nazwa_czujnika, $parametr)
+    {
+        $query = "from(bucket: \"$this->bucket\")
+        |> range(start: -1h)
+        |> filter(fn: (r) => r[\"_measurement\"] == \"$nazwa_czujnika\")
+        |> filter(fn: (r) => r[\"_field\"] == \"$parametr\")
+        |> last()
+        |> toString()";
+
+        $result = $this->client->createQueryApi()->queryRaw($query);
+
+        return substr($result, strrpos($result, ',') + 1);
     }
 
     public function addSensor($data)
@@ -53,6 +84,7 @@ class Sensor
         $wspolrzedne = $data['wspolrzedne'];
         $wysokosc_npm = $data['wysokosc_npm'];
         $id_czujnik = $data['id_czujnik'];
+        // UPDATE `rejestr_czujnikow` SET `nazwa` = 'Nazwa1', `wspolrzedne` = 'Wspo' WHERE `rejestr_czujnikow`.`id_czujnika` = 1;
 
         if (!empty($id_czujnik)) {
             if (!empty($nazwa)) {

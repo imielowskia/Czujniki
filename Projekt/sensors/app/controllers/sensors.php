@@ -18,6 +18,11 @@ class Sensors extends Controller
         $this->loadView('sensors/index');
     }
 
+    public function getCurrentInfluxParameter($nazwa_czujnika, $parametr)
+    {
+        return $this->model->getCurrentInfluxParameter($nazwa_czujnika, $parametr);
+    }
+
     public function deleteSensor()
     {
         $id_czujnik = trim($_POST['id_czujnik']);

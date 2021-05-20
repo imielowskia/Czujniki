@@ -70,6 +70,15 @@
             </div>
         </div>
 
+        <div class="col">
+            <h3>Parametry czujnika S11</h3>
+            <!-- Przykładowe pobranie bieżącej wartości z influxa -->
+            <p>Humid: <?php echo $this->getCurrentInfluxParameter("S11", "Humid"); ?></p>
+            <p>PM10: <?php echo $this->getCurrentInfluxParameter("S11", "PM10"); ?></p>
+            <p>PM25: <?php echo $this->getCurrentInfluxParameter("S11", "PM25"); ?></p>
+            <p>Temp: <?php echo $this->getCurrentInfluxParameter("S11", "Temp"); ?></p>
+        </div>
+
     </div>
     <script src="<?= JS_PATH ?>bootstrap.js"></script>
 </body>

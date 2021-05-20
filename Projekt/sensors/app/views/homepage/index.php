@@ -10,7 +10,6 @@
 </head>
 
 <body>
-
     <script src="<?= JS_PATH ?>bootstrap.js"></script>
 </body>
 

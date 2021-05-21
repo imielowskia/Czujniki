@@ -156,6 +156,7 @@
         .no-csspointerevents .nice-select.open .list {
         display: block; }
 
+
         html, body, div, span, applet, object, iframe,
         h1, h2, h3, h4, h5, h6, p, blockquote, pre,
         a, abbr, acronym, address, big, cite, code,
@@ -272,7 +273,7 @@
             padding-top: 12px;
         }
 
-        /* Tutaj podamy wykres aktualny */
+        /* do zmiany po wykresie gdy bedzie gotowy*/
         .wykres{
             min-height: 200px;
         }
@@ -324,6 +325,7 @@
         <div class="container">
             <div class="title">
                 Witamy na stronie czym oddycham!
+                <?php echo $this->getCurrentInfluxParameter("S09", "PM10") ?>
             </div>
             <p class="intro-text">
                 Tutaj dowiecie się jakie zanieczyszczenia możecie wdychać w danym rejonie powiatu Jarosławskiego. 
@@ -350,13 +352,13 @@
                             <div class="borderdiv"></div>
                             <div id="load-wykres">
                                 <div class="wykres">
-                                    Tutaj będzie aktualny wykres
+                                    Tu będzie wykres 1
                                 </div>
                             </div>
                             <div class="borderdiv"></div>
                             <div class="padded">
                                 <div class="legenda">
-                                    Test
+                                    test
                                 </div>
                             </div>
                         </div>

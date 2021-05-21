@@ -272,7 +272,7 @@
             padding-top: 12px;
         }
 
-        /* Tutaj podamy wykres aktualny */
+        /* to do zmiany gdy będzie wykres gotowy */
         .wykres{
             min-height: 200px;
         }
@@ -350,7 +350,7 @@
                             <div class="borderdiv"></div>
                             <div id="load-wykres">
                                 <div class="wykres">
-                                    Tutaj będzie aktualny wykres
+                                    Tu bedzie wykres 2
                                 </div>
                             </div>
                             <div class="borderdiv"></div>

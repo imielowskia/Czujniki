@@ -4,9 +4,10 @@ CREATE DATABASE IF NOT EXISTS czujniki;
 /* Tworzenie tabel */
 CREATE TABLE czujniki.rejestr_czujnikow (
   id_czujnika int NOT NULL AUTO_INCREMENT,
-  nazwa varchar(64) COLLATE utf8_polish_ci NOT NULL,
+  nazwa varchar(32) COLLATE utf8_polish_ci NOT NULL,
   opis varchar(128) COLLATE utf8_polish_ci NOT NULL,
-  wspolrzedne varchar(128) COLLATE utf8_polish_ci NOT NULL,
+  szerokosc varchar(32) COLLATE utf8_polish_ci NOT NULL,
+  dlugosc varchar(32) COLLATE utf8_polish_ci NOT NULL,
   wysokosc_npm float NOT NULL,
   PRIMARY KEY (id_czujnika)
 );
@@ -22,12 +23,14 @@ CREATE TABLE czujniki.dane_dzienne (
 );
 
 
+
+
 /* -------------------------------------------------- */
 
 
 /* Wstawianie przykładowych danych do tabeli rejestr_czujnikow */
-INSERT INTO czujniki.rejestr_czujnikow (id_czujnika, nazwa, opis, wspolrzedne, wysokosc_npm) 
-VALUES (NULL, 'Nazwa czujnika', 'Opis czujnika', 'X, Y', '200');
+INSERT INTO czujniki.rejestr_czujnikow (id_czujnika, nazwa, opis, szerokosc, dlugosc, wysokosc_npm) 
+VALUES (NULL, 'Nazwa czujnika', 'Opis czujnika', 'szerokosc', 'dlugosc', '200');
 
 /* Usuwanie z tabeli rejestr_czujnikow po id */
 DELETE FROM czujniki.rejestr_czujnikow WHERE id_czujnika=1;

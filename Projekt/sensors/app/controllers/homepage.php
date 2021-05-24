@@ -10,11 +10,16 @@ class HomePage extends Controller
     {
         session_start();
 
-        $this->model = $this->loadModel("sensor");
+        $this->model = $this->loadModel("sensorsModel");
     }
 
     public function index()
     {
         $this->loadView('homepage/index');
+    }
+
+    public function printSensorsList()
+    {
+        $this->model->printSensorsList();
     }
 }

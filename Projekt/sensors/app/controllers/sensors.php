@@ -10,7 +10,7 @@ class Sensors extends Controller
     {
         session_start();
 
-        $this->model = $this->loadModel("sensor");
+        $this->model = $this->loadModel("sensorsModel");
     }
 
     public function index()
@@ -18,9 +18,9 @@ class Sensors extends Controller
         $this->loadView('sensors/index');
     }
 
-    public function getCurrentInfluxParameter($nazwa_czujnika, $parametr)
+    public function getInfluxParameter($nazwa_czujnika, $parametr)
     {
-        return $this->model->getCurrentInfluxParameter($nazwa_czujnika, $parametr);
+        return $this->model->getInfluxParameter($nazwa_czujnika, $parametr);
     }
 
     public function deleteSensor()
@@ -35,7 +35,8 @@ class Sensors extends Controller
         $data = [
             'nazwa' => trim($_POST['nazwa']),
             'opis' => trim($_POST['opis']),
-            'wspolrzedne' => trim($_POST['wspolrzedne']),
+            'szerokosc' => trim($_POST['szerokosc']),
+            'dlugosc' => trim($_POST['dlugosc']),
             'wysokosc_npm' => trim($_POST['wysokosc_npm'])
         ];
 
@@ -47,7 +48,8 @@ class Sensors extends Controller
         $data = [
             'nazwa' => trim($_POST['edit_nazwa']),
             'opis' => trim($_POST['edit_opis']),
-            'wspolrzedne' => trim($_POST['edit_wspolrzedne']),
+            'szerokosc' => trim($_POST['edit_szerokosc']),
+            'dlugosc' => trim($_POST['edit_dlugosc']),
             'wysokosc_npm' => trim($_POST['edit_wysokosc_npm']),
             'id_czujnik' => trim($_POST['edit_id_czujnik'])
         ];

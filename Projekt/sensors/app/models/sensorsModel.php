@@ -2,12 +2,13 @@
 
 use InfluxDB2\Client;
 
-class Sensor
+class SensorsModel
 {
     private $database;
     private $client;
     private $bucket;
     private $queryApi;
+    private $currentSensor;
 
     public function __construct()
     {
@@ -34,29 +35,17 @@ class Sensor
         $this->queryApi = $this->client->createQueryApi();
     }
 
-    // Przesyła dane z wybranego zakresu ostatnich minut z bazy Influx do MySQL
-    public function toMySQL($minutes, $id_czujnik, $nazwa_czujnika)
+    public function setCurrentSensor($currentSensor)
     {
-        $query = "from(bucket: \"$this->bucket\")
-        |> range(start: -" . $minutes . "m, stop: now())
-        |> filter(fn: (r) => r[\"_measurement\"] == \"$nazwa_czujnika\")
-        |> last()";
-
-        $parser = $this->queryApi->queryStream($query);
-
-        foreach ($parser->each() as $record) {
-            $data = $record->getTime();
-            $data = str_replace("T", " ", substr($data, 0, -1));
-            $pm2_5 = $record->getValue("PM25");
-            $pm10 = $record->getValue("PM10");
-            $wilgotnosc = $record->getValue("Humid");
-            $temperatura = $record->getValue("Temp");
-
-            $this->addSqlRecord($id_czujnik, $data, $pm2_5, $pm10, $wilgotnosc, $temperatura);
-        }
+        $this->currentSensor = $currentSensor;
     }
 
-    public function getCurrentInfluxParameter($nazwa_czujnika, $parametr)
+    public function getCurrentSensor()
+    {
+        return $this->currentSensor;
+    }
+
+    public function getInfluxParameter($nazwa_czujnika, $parametr)
     {
         $query = "from(bucket: \"$this->bucket\")
         |> range(start: -1h)
@@ -70,16 +59,32 @@ class Sensor
         return substr($result, strrpos($result, ',') + 1);
     }
 
+    // Zwraca wybrany parametr z aktualnie wybranego czujnika
+    public function getCurrentInfluxParameter($parametr)
+    {
+        $query = "from(bucket: \"$this->bucket\")
+        |> range(start: -1h)
+        |> filter(fn: (r) => r[\"_measurement\"] == \"$this->currentSensor\")
+        |> filter(fn: (r) => r[\"_field\"] == \"$parametr\")
+        |> last()
+        |> toString()";
+
+        $result = $this->queryApi->queryRaw($query);
+
+        return substr($result, strrpos($result, ',') + 1);
+    }
+
     public function addSensor($data)
     {
         $nazwa = $data['nazwa'];
         $opis = $data['opis'];
-        $wspolrzedne = $data['wspolrzedne'];
+        $szerokosc = $data['szerokosc'];
+        $dlugosc = $data['dlugosc'];
         $wysokosc_npm = $data['wysokosc_npm'];
 
-        if (!empty($nazwa) && !empty($opis) && !empty($wspolrzedne) && !empty($wysokosc_npm)) {
-            $query = "INSERT INTO czujniki.rejestr_czujnikow (id_czujnika, nazwa, opis, wspolrzedne, wysokosc_npm) 
-                        VALUES (NULL, '$nazwa', '$opis', '$wspolrzedne', '$wysokosc_npm');";
+        if (!empty($nazwa) && !empty($opis) && !empty($szerokosc) && !empty($dlugosc) && !empty($wysokosc_npm)) {
+            $query = "INSERT INTO czujniki.rejestr_czujnikow (id_czujnika, nazwa, opis, szerokosc, dlugosc, wysokosc_npm) 
+                        VALUES (NULL, '$nazwa', '$opis', '$szerokosc', '$dlugosc','$wysokosc_npm');";
             $this->database->runQuery($query);
 
             header('Location: ' . ROOT_PATH . 'sensors');
@@ -101,7 +106,8 @@ class Sensor
         $parametry = "";
         $nazwa = $data['nazwa'];
         $opis = $data['opis'];
-        $wspolrzedne = $data['wspolrzedne'];
+        $szerokosc = $data['szerokosc'];
+        $dlugosc = $data['dlugosc'];
         $wysokosc_npm = $data['wysokosc_npm'];
         $id_czujnik = $data['id_czujnik'];
 
@@ -114,8 +120,12 @@ class Sensor
                 $parametry .= "opis = \"" . $opis . "\",";
             }
 
-            if (!empty($wspolrzedne)) {
-                $parametry .= "wspolrzedne = \"" . $wspolrzedne . "\",";
+            if (!empty($szerokosc)) {
+                $parametry .= "szerokosc = \"" . $szerokosc . "\",";
+            }
+
+            if (!empty($dlugosc)) {
+                $parametry .= "dlugosc = \"" . $dlugosc . "\",";
             }
 
             if (!empty($wysokosc_npm)) {
@@ -140,7 +150,8 @@ class Sensor
                 echo "<td>" . $row["id_czujnika"] . "</td>" .
                     "<td>" . $row["nazwa"] . "</td>" .
                     "<td>" . $row["opis"] . "</td>" .
-                    "<td>" . $row["wspolrzedne"] . "</td>" .
+                    "<td>" . $row["szerokosc"] . "</td>" .
+                    "<td>" . $row["dlugosc"] . "</td>" .
                     "<td>" . $row["wysokosc_npm"] . "</td>";
                 echo "</tr>";
             }
@@ -156,13 +167,47 @@ class Sensor
             while ($row = $result->fetch_assoc()) {
                 echo "<tr>";
                 echo "<td>" . $row["nazwa"] . "</td>" .
-                    "<td>" . $this->getCurrentInfluxParameter($row["nazwa"], "Humid") . "</td>" .
-                    "<td>" . $this->getCurrentInfluxParameter($row["nazwa"], "PM10") . "</td>" .
-                    "<td>" . $this->getCurrentInfluxParameter($row["nazwa"], "PM25") . "</td>" .
-                    "<td>" . $this->getCurrentInfluxParameter($row["nazwa"], "Temp") . "</td>";
+                    "<td>" . $this->getInfluxParameter($row["nazwa"], "Humid") . "</td>" .
+                    "<td>" . $this->getInfluxParameter($row["nazwa"], "PM10") . "</td>" .
+                    "<td>" . $this->getInfluxParameter($row["nazwa"], "PM25") . "</td>" .
+                    "<td>" . $this->getInfluxParameter($row["nazwa"], "Temp") . "</td>";
                 echo "</tr>";
             }
         } else echo "Brak danych";
+    }
+
+    public function printSensorsList()
+    {
+        $query = "SELECT * FROM czujniki.rejestr_czujnikow";
+        $result = $this->database->runQuery($query);
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                echo "<option value=" . $row["nazwa"] . ">" . $row["nazwa"] . "</option>";
+            }
+        } else echo "Brak danych";
+    }
+
+    // Przesyła dane z wybranego zakresu ostatnich minut z bazy Influx do MySQL
+    public function toMySQL($minutes, $id_czujnik, $nazwa_czujnika)
+    {
+        $query = "from(bucket: \"$this->bucket\")
+        |> range(start: -" . $minutes . "m, stop: now())
+        |> filter(fn: (r) => r[\"_measurement\"] == \"$nazwa_czujnika\")
+        |> last()";
+
+        $parser = $this->queryApi->queryStream($query);
+
+        foreach ($parser->each() as $record) {
+            $data = $record->getTime();
+            $data = str_replace("T", " ", substr($data, 0, -1));
+            $pm2_5 = $record->getValue("PM25");
+            $pm10 = $record->getValue("PM10");
+            $wilgotnosc = $record->getValue("Humid");
+            $temperatura = $record->getValue("Temp");
+
+            $this->addSqlRecord($id_czujnik, $data, $pm2_5, $pm10, $wilgotnosc, $temperatura);
+        }
     }
 
     private function addSqlRecord($id_czujnik, $data, $pm2_5, $pm10, $wilgotnosc, $temperatura)

@@ -20,7 +20,8 @@
                             <th scope="col">ID Czujnika</th>
                             <th scope="col">Nazwa</th>
                             <th scope="col">Opis</th>
-                            <th scope="col">Współrzędne</th>
+                            <th scope="col">Szerokość</th>
+                            <th scope="col">Długość</th>
                             <th scope="col">Wysokosc npm.</th>
                         </tr>
                     </thead>
@@ -38,7 +39,8 @@
                     <form action=" <?= ROOT_PATH ?>sensors/addSensor" method="POST" class="mb-3">
                         <input type="text" name="nazwa" class="form-control" placeholder="Nazwa"><br>
                         <input type="text" name="opis" class="form-control" placeholder="Opis"><br>
-                        <input type="text" name="wspolrzedne" class="form-control" placeholder="Współrzędne"><br>
+                        <input type="text" name="szerokosc" class="form-control" placeholder="Szerokość"><br>
+                        <input type="text" name="dlugosc" class="form-control" placeholder="Długość"><br>
                         <input type="number" step="any" name="wysokosc_npm" class="form-control" placeholder="Wysokość npm."><br>
 
                         <button type="submit" class="btn btn-primary">Dodaj</button>
@@ -62,7 +64,8 @@
                         <input type="number" name="edit_id_czujnik" class="form-control" placeholder="ID czujnika"><br>
                         <input type="text" name="edit_nazwa" class="form-control" placeholder="Nazwa"><br>
                         <input type="text" name="edit_opis" class="form-control" placeholder="Opis"><br>
-                        <input type="text" name="edit_wspolrzedne" class="form-control" placeholder="Współrzędne"><br>
+                        <input type="text" name="edit_szerokosc" class="form-control" placeholder="Szerokość"><br>
+                        <input type="text" name="edit_dlugosc" class="form-control" placeholder="Długość"><br>
                         <input type="number" step="any" name="edit_wysokosc_npm" class="form-control" placeholder="Wysokość npm."><br>
 
                         <button type="submit" class="btn btn-primary">Edytuj</button>
@@ -88,11 +91,8 @@
                 </tbody>
             </table>
         </div>
-
-        <!-- Pobranie bieżącego parametru PM10 z czujnika S09 z bazy Influx -->
-        <?php $this->getCurrentInfluxParameter("S09", "PM10") ?>
-
     </div>
+
     <script src="<?= JS_PATH ?>bootstrap.js"></script>
 </body>
 

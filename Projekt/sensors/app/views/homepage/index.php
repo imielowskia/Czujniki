@@ -30,7 +30,7 @@
                     <h2 class="fw-light">Witamy na stronie czym oddycham!</h2>
                     <p class="lead text-muted">
                         Tutaj dowiecie się jakie zanieczyszczenia możecie wdychać w danym rejonie powiatu Jarosławskiego.
-                        Jak to zrobić? To proste! Wystarczy że naciśniesz przycisk wyboru ulicy a dany czujnik pokaże aktualny skład powietrza na przestrzeni czasu oraz aktualny!
+                        Jak to zrobić? To proste! Wystarczy że wybierzesz czujnik z poniższej listy a nasza strona przedstawi Ci aktualny stan powietrza na wybranej przestrzeni czasu!
                     </p>
 
                     <form action="<?= ROOT_PATH ?>sensor" method="POST">
@@ -62,7 +62,7 @@
     <!-- Skrypty odpowiedzialne za mapę -->
     <script src="<?= JS_PATH ?>leaflet.js"></script>
     <script>
-        var mymap = L.map('mapid').setView([51.505, -0.09], 13);
+        var mymap = L.map('mapid').setView([50.015, 22.68], 14);
 
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
             maxZoom: 18,

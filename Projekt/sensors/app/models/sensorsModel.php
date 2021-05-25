@@ -188,6 +188,12 @@ class SensorsModel
         } else echo "Brak danych";
     }
 
+    public function getSensorInfo($info)
+    {
+        $query = "SELECT $info FROM czujniki.rejestr_czujnikow WHERE nazwa = \"" . $this->currentSensor . "\"";
+        return $this->database->runQuerySingle($query);
+    }
+
     // Przesyła dane z wybranego zakresu ostatnich minut z bazy Influx do MySQL
     public function toMySQL($minutes, $id_czujnik, $nazwa_czujnika)
     {

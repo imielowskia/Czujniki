@@ -12,8 +12,12 @@ class Sensor extends Controller
 
         $this->model = $this->loadModel("sensorsModel");
 
-        $currentSensor = trim($_POST['nazwa_czujnika']);
-        $this->model->setCurrentSensor($currentSensor);
+        if (isset($_POST['nazwa_czujnika'])) {
+            $_SESSION["nazwa_czujnika"] = trim($_POST['nazwa_czujnika']);
+            $this->model->setCurrentSensor($_SESSION["nazwa_czujnika"]);
+        } else if (isset($_SESSION["nazwa_czujnika"])) {
+            $this->model->setCurrentSensor($_SESSION["nazwa_czujnika"]);
+        }
     }
 
     public function index()
@@ -29,5 +33,10 @@ class Sensor extends Controller
     public function getCurrentSensor()
     {
         return $this->model->getCurrentSensor();
+    }
+
+    public function getSensorInfo($info)
+    {
+        return $this->model->getSensorInfo($info);
     }
 }

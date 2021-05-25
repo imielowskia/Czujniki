@@ -24,6 +24,11 @@ class Database
         return $this->connection->query($query);
     }
 
+    public function runQuerySingle($query)
+    {
+        return $this->connection->query($query)->fetch_array()[0] ?? '';
+    }
+
     public function close()
     {
         return $this->connection->close();

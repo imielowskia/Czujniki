@@ -39,4 +39,9 @@ class Sensor extends Controller
     {
         return $this->model->getSensorInfo($info);
     }
+
+    public function getLast24Values()
+    {
+        return $this->model->getLast24Values();
+    }
 }

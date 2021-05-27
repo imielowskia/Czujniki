@@ -88,7 +88,7 @@ class SensorsModel
         $wysokosc_npm = $data['wysokosc_npm'];
 
         if (!empty($nazwa) && !empty($opis) && !empty($szerokosc) && !empty($dlugosc) && !empty($wysokosc_npm)) {
-            $query = "INSERT INTO czujniki.rejestr_czujnikow (id_czujnika, nazwa, opis, szerokosc, dlugosc, wysokosc_npm) 
+            $query = "INSERT INTO rejestr_czujnikow (id_czujnika, nazwa, opis, szerokosc, dlugosc, wysokosc_npm) 
                         VALUES (NULL, '$nazwa', '$opis', '$szerokosc', '$dlugosc','$wysokosc_npm');";
             $this->database->runQuery($query);
 
@@ -99,7 +99,7 @@ class SensorsModel
     public function deleteSensor($id_czujnik)
     {
         if (!empty($id_czujnik)) {
-            $query = "DELETE FROM czujniki.rejestr_czujnikow WHERE id_czujnika=" . $id_czujnik . ";";
+            $query = "DELETE FROM rejestr_czujnikow WHERE id_czujnika=" . $id_czujnik . ";";
             $this->database->runQuery($query);
 
             header('Location: ' . ROOT_PATH . 'sensors');
@@ -137,7 +137,7 @@ class SensorsModel
                 $parametry .= "wysokosc_npm = " . $wysokosc_npm . ",";
             }
 
-            $query = "UPDATE czujniki.rejestr_czujnikow SET " . substr($parametry, 0, -1) . " WHERE rejestr_czujnikow.id_czujnika = " . $id_czujnik . ";";
+            $query = "UPDATE rejestr_czujnikow SET " . substr($parametry, 0, -1) . " WHERE rejestr_czujnikow.id_czujnika = " . $id_czujnik . ";";
             $this->database->runQuery($query);
 
             header('Location: ' . ROOT_PATH . 'sensors');
@@ -146,7 +146,7 @@ class SensorsModel
 
     public function printSensorsTable()
     {
-        $query = "SELECT * FROM czujniki.rejestr_czujnikow";
+        $query = "SELECT * FROM rejestr_czujnikow";
         $result = $this->database->runQuery($query);
 
         if ($result->num_rows > 0) {
@@ -165,7 +165,7 @@ class SensorsModel
 
     public function printDataTable()
     {
-        $query = "SELECT * FROM czujniki.rejestr_czujnikow";
+        $query = "SELECT * FROM rejestr_czujnikow";
         $result = $this->database->runQuery($query);
 
         if ($result->num_rows > 0) {
@@ -183,7 +183,7 @@ class SensorsModel
 
     public function printSensorsList()
     {
-        $query = "SELECT * FROM czujniki.rejestr_czujnikow";
+        $query = "SELECT * FROM rejestr_czujnikow";
         $result = $this->database->runQuery($query);
 
         if ($result->num_rows > 0) {
@@ -195,7 +195,7 @@ class SensorsModel
 
     public function getSensorInfo($info)
     {
-        $query = "SELECT $info FROM czujniki.rejestr_czujnikow WHERE nazwa = \"" . $this->currentSensor . "\"";
+        $query = "SELECT $info FROM rejestr_czujnikow WHERE nazwa = \"" . $this->currentSensor . "\"";
         return $this->database->runQuery($query)->fetch_array()[0] ?? '';
     }
 
@@ -223,7 +223,7 @@ class SensorsModel
 
     private function addSqlRecord($id_czujnik, $data, $pm2_5, $pm10, $wilgotnosc, $temperatura)
     {
-        $query = "INSERT INTO czujniki.dane_dzienne (id_czujnika, data, pm2_5, pm10, wilgotnosc, temperatura) 
+        $query = "INSERT INTO dane_dzienne (id_czujnika, data, pm2_5, pm10, wilgotnosc, temperatura) 
         VALUES ('$id_czujnik', '$data', '$pm2_5', '$pm10', '$wilgotnosc', '$temperatura');";
 
         $this->database->runQuery($query);

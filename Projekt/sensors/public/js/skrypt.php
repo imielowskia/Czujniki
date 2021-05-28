@@ -14,9 +14,9 @@ $geojson = array('type' => 'FeatureCollection', 'features' => array());
 
 while ($row = mysqli_fetch_assoc($result)) {
     $marker = array(
-        'type' => 'Nazwa',
+        'type' => 'Feature',
         'features' => array(
-            'type' => 'Opis',
+            'type' => 'Feature',
             "geometry" => array(
                 'type' => 'Point',
                 'coordinates' => array(

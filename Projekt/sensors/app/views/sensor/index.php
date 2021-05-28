@@ -11,7 +11,11 @@
     <link rel="stylesheet" href="<?= CSS_PATH ?>leaflet.css">
 </head>
 
-<?php if (isset($_SESSION['nazwa_czujnika'])) : ?>
+<?php if (isset($_SESSION['sensorName'])) : ?>
+    <?php
+    $humidData = $this->jsonCurrentDay("Humid");
+    $tempData = $this->jsonCurrentDay("Temp");
+    ?>
 
     <body class="d-flex h-100">
         <div class="container d-flex flex-column mx-auto">
@@ -29,7 +33,7 @@
             <main>
                 <div class="row row-cols-1 row-cols-lg-2 align-items-center">
                     <div class="col p-4">
-                        <h2 class="fw-light">Bieżące parametry czujnika <?php echo $this->getCurrentSensor() ?></h2>
+                        <h2 class="fw-light">Bieżące parametry czujnika <?php echo $this->getCurrentSensorName() ?></h2>
                         <p class="lead text-muted"><?php echo $this->getSensorInfo("opis") ?></p>
                         <table class="table">
                             <tr>
@@ -55,7 +59,7 @@
                         <div class="row row-cols-1 row-cols-md-2">
                             <div class="col">
                                 <p class="m-0">Wybierz parametr:</p>
-                                <select id="ChartParameter" name="Wykres_typ" class="form-select mb-3" onclick="updateChart()">
+                                <select id="ChartParameter" class="form-select mb-3" onclick="updateChart()">
                                     <option value="1">Wilgotność</option>
                                     <option value="2">Temperatura</option>
                                     <option value="3">PM10</option>
@@ -65,7 +69,7 @@
 
                             <div class="col">
                                 <p class="m-0">Wybierz zakres czasu:</p>
-                                <select id="ChartTimeRange" name="Wykres_okres" class="form-select" onclick="updateChart()">
+                                <select id="ChartTimeRange" class="form-select" onclick="updateChart()">
                                     <option value="1">Wykres dzienny</option>
                                     <option value="2">Wykres tygodniowy</option>
                                     <option value="3">Wykres miesięczny</option>
@@ -86,6 +90,25 @@
         </div>
 
         <!-- Skrypty odpowiedzialne za wykresy -->
+        <script>
+            // dzienne
+            var jsonDayHumid = <?php echo $this->jsonCurrentDay("Humid"); ?>;
+            var jsonDayTemp = <?php echo $this->jsonCurrentDay("Temp"); ?>;
+            var jsonDayPM10 = <?php echo $this->jsonCurrentDay("PM10"); ?>;
+            var jsonDayPM25 = <?php echo $this->jsonCurrentDay("PM25"); ?>;
+
+            // tygodniowe
+            var jsonWeekHumid;
+            var jsonWeekTemp;
+            var jsonWeekPM10;
+            var jsonWeekPM25;
+
+            // miesięczne
+            var jsonMonthHumid;
+            var jsonMonthTemp;
+            var jsonMonthPM10;
+            var jsonMonthPM25;
+        </script>
         <script src="<?= JS_PATH ?>chart.js"></script>
         <script src="<?= JS_PATH ?>views/sensor.js"></script>
     </body>

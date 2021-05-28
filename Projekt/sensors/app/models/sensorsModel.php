@@ -8,7 +8,7 @@ class SensorsModel
     private $client;
     private $bucket;
     private $queryApi;
-    private $currentSensor;
+    private $currentSensorName;
 
     public function __construct()
     {
@@ -35,43 +35,68 @@ class SensorsModel
         $this->queryApi = $this->client->createQueryApi();
     }
 
-    public function setCurrentSensor($currentSensor)
+    public function setCurrentSensorName($currentSensorName)
     {
-        $this->currentSensor = $currentSensor;
+        $this->currentSensorName = $currentSensorName;
     }
 
-    public function getCurrentSensor()
+    public function getCurrentSensorName()
     {
-        return $this->currentSensor;
+        return $this->currentSensorName;
     }
 
-    public function getInfluxParameter($nazwa_czujnika, $parametr)
+    public function getInfluxParameter($sensorName, $parameter)
     {
-        $query = "from(bucket: \"$this->bucket\")
+        $query = "from(bucket: \"" . $this->bucket . "\")
         |> range(start: -1h)
-        |> filter(fn: (r) => r[\"_measurement\"] == \"$nazwa_czujnika\")
-        |> filter(fn: (r) => r[\"_field\"] == \"$parametr\")
-        |> last()
-        |> toString()";
+        |> filter(fn: (r) => r[\"_measurement\"] == \"" . $sensorName . "\")
+        |> filter(fn: (r) => r[\"_field\"] == \"" . $parameter . "\")
+        |> last()";
 
-        $result = $this->queryApi->queryRaw($query);
+        $result = $this->queryApi->query($query);
 
-        return substr($result, strrpos($result, ',') + 1);
+        return round($result[0]->records[0]->getValue());
     }
 
     // Zwraca wybrany parametr z aktualnie wybranego czujnika
-    public function getCurrentInfluxParameter($parametr)
+    public function getCurrentInfluxParameter($parameter)
     {
-        $query = "from(bucket: \"$this->bucket\")
+        $query = "from(bucket: \"" . $this->bucket . "\")
         |> range(start: -1h)
-        |> filter(fn: (r) => r[\"_measurement\"] == \"$this->currentSensor\")
-        |> filter(fn: (r) => r[\"_field\"] == \"$parametr\")
-        |> last()
-        |> toString()";
+        |> filter(fn: (r) => r[\"_measurement\"] == \"" . $this->currentSensorName . "\")
+        |> filter(fn: (r) => r[\"_field\"] == \"" . $parameter . "\")
+        |> last()";
 
-        $result = $this->queryApi->queryRaw($query);
+        $result = $this->queryApi->query($query);
 
-        return substr($result, strrpos($result, ',') + 1);
+        return round($result[0]->records[0]->getValue());
+    }
+
+    public function jsonCurrentDay($parameter)
+    {
+        $startDate = date("Y-m-d") . "T00:00:00Z";
+        $stopDate = date("Y-m-d") . "T" . date("H") . ":00:00Z";
+        $chartArrayData = array();
+
+        $query = "import \"date\"
+            from(bucket: \"" . $this->bucket . "\")
+             |> range(start: " . $startDate . ", stop: " . $stopDate . ")
+             |> filter(fn: (r) => date.truncate(t: r._time, unit: 1d) == date.truncate(t: now(), unit: 1d))
+             |> filter(fn: (r) => r[\"_measurement\"] == \"" . $this->currentSensorName . "\")
+             |> filter(fn: (r) => r[\"_field\"] == \"" . $parameter . "\")
+             |> aggregateWindow(every: 1h, fn: mean)
+             |> hourSelection(start: 0, stop: 23)";
+
+        $parser = $this->queryApi->queryStream($query);
+
+        $i = 0;
+        foreach ($parser->each() as $record) {
+            $parameterValue = round($record->getValue($parameter));
+            $chartArrayData[$i++] = $parameterValue;
+        }
+
+        array_pop($chartArrayData);
+        return json_encode($chartArrayData);
     }
 
     public function addSensor($data)
@@ -190,16 +215,17 @@ class SensorsModel
 
     public function getSensorInfo($info)
     {
-        $query = "SELECT $info FROM rejestr_czujnikow WHERE nazwa = \"" . $this->currentSensor . "\"";
+        $query = "SELECT $info FROM rejestr_czujnikow WHERE nazwa = \"" . $this->currentSensorName . "\"";
         return $this->database->runQuery($query)->fetch_array()[0] ?? '';
     }
 
+    // Funkcja eksperymentalna
     // Przesyła dane z wybranego zakresu ostatnich minut z bazy Influx do MySQL
-    public function toMySQL($minutes, $id_czujnik, $nazwa_czujnika)
+    public function toMySQL($minutes, $id_czujnik, $sensorName)
     {
-        $query = "from(bucket: \"$this->bucket\")
+        $query = "from(bucket: \"" . $this->bucket . "\")
         |> range(start: -" . $minutes . "m, stop: now())
-        |> filter(fn: (r) => r[\"_measurement\"] == \"$nazwa_czujnika\")
+        |> filter(fn: (r) => r[\"_measurement\"] == \"" . $sensorName . "\")
         |> last()";
 
         $parser = $this->queryApi->queryStream($query);

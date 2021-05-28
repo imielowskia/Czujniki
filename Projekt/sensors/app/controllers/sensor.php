@@ -12,11 +12,11 @@ class Sensor extends Controller
 
         $this->model = $this->loadModel("sensorsModel");
 
-        if (isset($_POST['nazwa_czujnika'])) {
-            $_SESSION["nazwa_czujnika"] = trim($_POST['nazwa_czujnika']);
-            $this->model->setCurrentSensor($_SESSION["nazwa_czujnika"]);
-        } else if (isset($_SESSION["nazwa_czujnika"])) {
-            $this->model->setCurrentSensor($_SESSION["nazwa_czujnika"]);
+        if (isset($_POST['sensorName'])) {
+            $_SESSION["sensorName"] = trim($_POST['sensorName']);
+            $this->model->setCurrentSensorName($_SESSION["sensorName"]);
+        } else if (isset($_SESSION["sensorName"])) {
+            $this->model->setCurrentSensorName($_SESSION["sensorName"]);
         }
     }
 
@@ -25,18 +25,23 @@ class Sensor extends Controller
         $this->loadView('sensor/index');
     }
 
-    public function getCurrentInfluxParameter($parametr)
+    public function getCurrentInfluxParameter($parameter)
     {
-        return $this->model->getCurrentInfluxParameter($parametr);
+        return $this->model->getCurrentInfluxParameter($parameter);
     }
 
-    public function getCurrentSensor()
+    public function getCurrentSensorName()
     {
-        return $this->model->getCurrentSensor();
+        return $this->model->getCurrentSensorName();
     }
 
     public function getSensorInfo($info)
     {
         return $this->model->getSensorInfo($info);
+    }
+
+    public function jsonCurrentDay($parameter)
+    {
+        return $this->model->jsonCurrentDay($parameter);
     }
 }

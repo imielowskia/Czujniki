@@ -27,16 +27,16 @@
         <main>
             <div class="row row row-cols-1 row-cols-lg-2 align-items-center">
                 <div class="col p-4">
-                    <h2 class="fw-light">Witamy na stronie czym oddycham!</h2>
+                    <h2 class="fw-light">Witaj na stronie czym oddycham!</h2>
                     <p class="lead text-muted">
-                        Tutaj dowiecie się jakie zanieczyszczenia możecie wdychać w danym rejonie powiatu Jarosławskiego.
-                        Jak to zrobić? To proste! Wystarczy że wybierzesz czujnik z poniższej listy a nasza strona przedstawi Ci aktualny stan powietrza na wybranej przestrzeni czasu!
+                        Tutaj dowiesz się jaki jest stan powietrza danym rejonie powiatu Jarosławskiego.
+                        Jak to zrobić? To proste! Wystarczy że wybierzesz czujnik z poniższej listy a nasza strona przedstawi Ci aktualny stan powietrza na wybranej przestrzeni czasu.
                     </p>
 
                     <form action="<?= ROOT_PATH ?>sensor" method="POST">
                         <div class="row">
                             <div class="col">
-                                <select name="nazwa_czujnika" class="form-select">
+                                <select name="sensorName" class="form-select">
                                     <?php $this->printSensorsList() ?>
                                 </select>
                             </div>

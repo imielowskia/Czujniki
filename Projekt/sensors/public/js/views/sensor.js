@@ -51,19 +51,51 @@ function openChart() {
     charts[parameterValue - 1].style.display = "block";
 }
 
-// TODO: Wczytywanie danych z json zależnie od wybranego zakresu czasu
 function createChart(chartCanvas, label) {
-    var labels;
+    var labels, data;
+    var jsonHumid, jsonTemp, jsonPM10, jsonPM25;
 
     switch (timeRangeValue) {
         case 1:
-            labels = ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'];
+            labels = ['01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'];
+            jsonHumid = jsonDayHumid;
+            jsonTemp = jsonDayTemp;
+            jsonPM10 = jsonDayPM10;
+            jsonPM25 = jsonDayPM25;
             break;
+
         case 2:
             labels = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'];
+            jsonHumid = jsonWeekHumid;
+            jsonTemp = jsonWeekTemp;
+            jsonPM10 = jsonWeekPM10;
+            jsonPM25 = jsonWeekPM25;
             break;
+
         case 3:
             labels = ['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'];
+            jsonHumid = jsonMonthHumid;
+            jsonTemp = jsonMonthTemp;
+            jsonPM10 = jsonMonthPM10;
+            jsonPM25 = jsonMonthPM25;
+            break;
+    }
+
+    switch (parameterValue) {
+        case 1:
+            data = jsonHumid;
+            break;
+
+        case 2:
+            data = jsonTemp;
+            break;
+
+        case 3:
+            data = jsonPM10;
+            break;
+
+        case 4:
+            data = jsonPM25;
             break;
     }
 
@@ -72,7 +104,7 @@ function createChart(chartCanvas, label) {
         data: {
             datasets: [{
                 label: label,
-                data: [],
+                data: data,
                 backgroundColor: [
                     'rgba(10, 88, 202, 0.25)'
                 ],

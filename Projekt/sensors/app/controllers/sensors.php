@@ -18,9 +18,9 @@ class Sensors extends Controller
         $this->loadView('sensors/index');
     }
 
-    public function getInfluxParameter($nazwa_czujnika, $parametr)
+    public function getInfluxParameter($sensorName, $parameter)
     {
-        return $this->model->getInfluxParameter($nazwa_czujnika, $parametr);
+        return $this->model->getInfluxParameter($sensorName, $parameter);
     }
 
     public function deleteSensor()
@@ -68,8 +68,8 @@ class Sensors extends Controller
     }
 
     // Funkcja eksperymentalna
-    public function toMySQL($minutes, $id_czujnik, $nazwa_czujnika)
+    public function toMySQL($minutes, $id_czujnik, $sensorName)
     {
-        return $this->model->toMySQL($minutes, $id_czujnik, $nazwa_czujnika);
+        return $this->model->toMySQL($minutes, $id_czujnik, $sensorName);
     }
 }

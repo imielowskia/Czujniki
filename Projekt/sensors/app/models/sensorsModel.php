@@ -14,9 +14,9 @@ class SensorsModel
     {
         // Connecting the mySQL database
         $dbhost = 'localhost';
-        $dbuser = 'root';
-        $dbpass = '';
-        $dbname = 'czujniki';
+        $dbuser = 'SENSOR';
+        $dbpass = 'haslosensora';
+        $dbname = 'sensors';
 
         $this->database = new Database($dbhost, $dbuser, $dbpass, $dbname);
 

@@ -6,7 +6,7 @@ var mymap = L.map('mapid').setView([ 50.01628836750675,22.677583694458008 ], 13)
         tileSize: 512,
         zoomOffset: -1,
         accessToken: 'pk.eyJ1IjoiZHVkYTEzMTMzIiwiYSI6ImNrcDJwdmQ2dDFwMTUycW1jY2w4aHM0d2cifQ.jkBf9aZmMU6QUS9wHtoGBQ'
-    }).addTo('mapid');
+    }).addTo(mymap);
     $.ajax({
         type:"Point",
         url: '',
@@ -15,4 +15,4 @@ var mymap = L.map('mapid').setView([ 50.01628836750675,22.677583694458008 ], 13)
         error: function (xhr) {
             alert(xhr.statusText)
         }
-    }).addTo('mapid');
+    }).addTo(mymap);

@@ -1,5 +1,6 @@
 <?php
-
+class Database
+    
 $sql = "SELECT * FROM waypoint";
 
 $dbhost = "localhost";

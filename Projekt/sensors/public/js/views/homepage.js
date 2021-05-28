@@ -15,4 +15,4 @@ var mymap = L.map('mapid').setView([ 50.01628836750675,22.677583694458008 ], 13)
         error: function (xhr) {
             alert(xhr.statusText)
         }
-    })
+    }).addTo('mapid');

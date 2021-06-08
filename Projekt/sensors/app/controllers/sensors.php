@@ -66,10 +66,4 @@ class Sensors extends Controller
     {
         $this->model->printDataTable();
     }
-
-    // Funkcja eksperymentalna
-    public function toMySQL($minutes, $id_czujnik, $sensorName)
-    {
-        return $this->model->toMySQL($minutes, $id_czujnik, $sensorName);
-    }
 }

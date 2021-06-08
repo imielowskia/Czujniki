@@ -86,7 +86,6 @@ class SensorsModel
              |> filter(fn: (r) => r[\"_field\"] == \"" . $parameter . "\")
              |> aggregateWindow(every: 1h, fn: mean)
              |> hourSelection(start: 0, stop: 23)";
-
         $parser = $this->queryApi->queryStream($query);
 
         $i = 0;
@@ -219,26 +218,56 @@ class SensorsModel
         return $this->database->runQuery($query)->fetch_array()[0] ?? '';
     }
 
-    // Funkcja eksperymentalna
-    // Przesyła dane z wybranego zakresu ostatnich minut z bazy Influx do MySQL
-    public function toMySQL($minutes, $id_czujnik, $sensorName)
+    // Funkcja po uruchomieniu przepisuje dane średnie godzinne z dnia poprzedniego z bazy Influx do bazy MySQL
+    public function toMySQL()
     {
-        $query = "from(bucket: \"" . $this->bucket . "\")
-        |> range(start: -" . $minutes . "m, stop: now())
-        |> filter(fn: (r) => r[\"_measurement\"] == \"" . $sensorName . "\")
-        |> last()";
+        $startDate = date("Y-m-d", strtotime("-2 days")) . "T23:00:00Z";
+        $stopDate = date("Y-m-d", strtotime("-1 days")) . "T23:00:00Z";
 
-        $parser = $this->queryApi->queryStream($query);
+        foreach ($this->getSensors() as $id_czujnik => $sensorName) {
+            $count = 0;
 
-        foreach ($parser->each() as $record) {
-            $data = $record->getTime();
-            $data = str_replace("T", " ", substr($data, 0, -1));
-            $pm2_5 = $record->getValue("PM25");
-            $pm10 = $record->getValue("PM10");
-            $wilgotnosc = $record->getValue("Humid");
-            $temperatura = $record->getValue("Temp");
+            $dataPM10 = array();
+            $dataPM25 = array();
+            $dataHumid = array();
+            $dataTemp = array();
+            $dateDate = array();
 
-            $this->addSqlRecord($id_czujnik, $data, $pm2_5, $pm10, $wilgotnosc, $temperatura);
+            $query = "import \"date\"
+            from(bucket: \"" . $this->bucket . "\")
+            |> range(start: " . $startDate . ", stop: " . $stopDate . ")
+            |> filter(fn: (r) => r[\"_measurement\"] == \"" . $sensorName . "\")
+            |> filter(fn: (r) => r[\"_field\"] == \"Humid\" or r[\"_field\"] == \"PM10\" or r[\"_field\"] == \"PM25\" or r[\"_field\"] == \"Temp\")
+            |> aggregateWindow(every: 1h, fn: mean)";
+
+            $parser = $this->queryApi->queryStream($query);
+
+            foreach ($parser->each() as $record) {
+                $date = $record->getTime();
+                $date = str_replace("T", " ", substr($date, 0, -1));
+                $data = round($record->getValue("_"));
+
+                if ($count < 24) {
+                    // Humid
+                    array_push($dataHumid, $data);
+                    array_push($dateDate, $date);
+                } else if ($count < 24 * 2) {
+                    // PM10
+                    array_push($dataPM10, $data);
+                } else if ($count < 24 * 3) {
+                    // PM25
+                    array_push($dataPM25, $data);
+                } else if ($count < 24 * 4) {
+                    // Temp
+                    array_push($dataTemp, $data);
+                }
+
+                $count++;
+            }
+
+            for ($hour = 0; $hour <= 23; $hour++) {
+                $this->addSqlRecord($id_czujnik, $dateDate[$hour], $dataHumid[$hour], $dataPM10[$hour], $dataPM25[$hour], $dataTemp[$hour]);
+            }
         }
     }
 
@@ -248,5 +277,20 @@ class SensorsModel
         VALUES ('$id_czujnik', '$data', '$pm2_5', '$pm10', '$wilgotnosc', '$temperatura');";
 
         $this->database->runQuery($query);
+    }
+
+    private function getSensors()
+    {
+        $query = "SELECT * FROM rejestr_czujnikow";
+        $result = $this->database->runQuery($query);
+        $sensors = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $sensors += [$row["id_czujnika"] => $row["nazwa"]];
+            }
+        } else echo "Brak danych";
+
+        return $sensors;
     }
 }

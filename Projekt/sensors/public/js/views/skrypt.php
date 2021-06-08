@@ -1,6 +1,6 @@
 <?php
 
-$sql = "SELECT * FROM waypoint";
+$sql = "SELECT * FROM rejestr_czujnikow";
 
 $dbhost = "localhost";
 $dbuser = "SENSOR";

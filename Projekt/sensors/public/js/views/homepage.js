@@ -9,7 +9,7 @@ var mymap = L.map('mapid').setView([ 50.01628836750675,22.677583694458008 ], 13)
     }).addTo(mymap);
     $.ajax({
         type:"Point",
-        url: '',
+        url: 'skrypt.php',
         dataType: 'json',
         success: console.log("Dane załadowane pomyślnie"),
         error: function (xhr) {

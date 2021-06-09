@@ -60,9 +60,9 @@
     </div>
 
     <!-- Skrypty odpowiedzialne za mapę -->
+    <script src="<?= JS_PATH ?>jquery-3.6.0.min.js"></script>
     <script src="<?= JS_PATH ?>leaflet.js"></script>
     <script src="<?= JS_PATH ?>views/homepage.js"></script>
-    <script src="<?= JS_PATH ?>jquery-3.6.0.min.js"></script>
 </body>
 
 </html>

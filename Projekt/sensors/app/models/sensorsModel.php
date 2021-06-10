@@ -299,25 +299,25 @@ class SensorsModel
         $data = array();
 
         for ($day = 0; $day <= 6; $day++) {
-            $date = date('Y-m-d', strtotime('+' . (1 - date('w') + $day) . ' days'));
-            $value = $this->getDailyAvgValues($parameter, $date)[$dayOrNight];
+            $dateStart = date('Y-m-d', strtotime('+' . (1 - date('w') + $day - 1) . ' days'));
+            $dateStop = date('Y-m-d', strtotime('+' . (1 - date('w') + $day) . ' days'));
+            $value = $this->getDailyAvgValues($parameter, $dateStart, $dateStop)[$dayOrNight];
 
             array_push($data, $value);
         }
-
         return json_encode($data);
     }
 
-    private function getDailyAvgValues($parameter, $date)
+    private function getDailyAvgValues($parameter, $dateStart, $dateStop)
     {
         $queryID = "SELECT id_czujnika FROM `rejestr_czujnikow` WHERE nazwa = '$this->currentSensorName'";
         $sensorID = $this->database->getConnection()->query($queryID)->fetch_array()[0] ?? '';
 
-        $queryFirstHalf = "SELECT $parameter FROM `dane_dzienne`
-        WHERE data BETWEEN '$date 00:00:00' AND '$date 11:00:00' AND id_czujnika = $sensorID";
+        $queryFirstHalf = "SELECT AVG($parameter) FROM `dane_dzienne`
+        WHERE data BETWEEN '$dateStart 20:00:00' AND '$dateStop 08:00:00' AND id_czujnika = $sensorID";
 
-        $querySecondHalf = "SELECT $parameter FROM `dane_dzienne`
-        WHERE data BETWEEN '$date 11:00:00' AND '$date 23:00:00' AND id_czujnika = $sensorID";
+        $querySecondHalf = "SELECT AVG($parameter) FROM `dane_dzienne`
+        WHERE data BETWEEN '$dateStart 08:00:00' AND '$dateStop 20:00:00' AND id_czujnika = $sensorID";
 
         $avgFirstHalf = $this->database->getConnection()->query($queryFirstHalf)->fetch_array()[0] ?? '';
         $avgSecondHalf = $this->database->getConnection()->query($querySecondHalf)->fetch_array()[0] ?? '';

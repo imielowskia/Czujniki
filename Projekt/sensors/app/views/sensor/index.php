@@ -98,10 +98,15 @@
             var jsonDayPM25 = <?php echo $this->jsonCurrentDay("PM25"); ?>;
 
             // tygodniowe
-            var jsonWeekHumid;
-            var jsonWeekTemp;
-            var jsonWeekPM10;
-            var jsonWeekPM25;
+            var jsonWeekNightHumid = <?php echo $this->getWeeklyAvgValues("wilgotnosc", 0) ?>;
+            var jsonWeekNightTemp = <?php echo $this->getWeeklyAvgValues("temperatura", 0) ?>;
+            var jsonWeekNightPM10 = <?php echo $this->getWeeklyAvgValues("pm10", 0) ?>;
+            var jsonWeekNightPM25 = <?php echo $this->getWeeklyAvgValues("pm2_5", 0) ?>;
+
+            var jsonWeekDayHumid = <?php echo $this->getWeeklyAvgValues("wilgotnosc", 1) ?>;
+            var jsonWeekDayTemp = <?php echo $this->getWeeklyAvgValues("temperatura", 1) ?>;
+            var jsonWeekDayPM10 = <?php echo $this->getWeeklyAvgValues("pm10", 1) ?>;
+            var jsonWeekDayPM25 = <?php echo $this->getWeeklyAvgValues("pm2_5", 1) ?>;
 
             // miesięczne
             var jsonMonthHumid;

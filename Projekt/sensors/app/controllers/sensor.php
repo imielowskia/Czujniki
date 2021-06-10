@@ -44,4 +44,9 @@ class Sensor extends Controller
     {
         return $this->model->jsonCurrentDay($parameter);
     }
+    
+    public function getWeeklyAvgValues($parameter, $dayOrNight)
+    {
+        return $this->model->getWeeklyAvgValues($parameter, $dayOrNight);
+    }
 }

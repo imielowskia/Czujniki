@@ -1,5 +1,3 @@
-// TODO: dodać aktualizowanie zawartości wykresów przy zmianie zakresu czasu, dodać wczytywanie danych z bieżącego dnia
-
 // 1: wilgotność, 2: temperatura, 3: pm10, 4: pm2.5
 var parameterID = document.getElementById("ChartParameter");
 
@@ -52,8 +50,10 @@ function openChart() {
 }
 
 function createChart(chartCanvas, label) {
-    var labels, data;
+    var labels, data, dataDay, dataNight;
     var jsonHumid, jsonTemp, jsonPM10, jsonPM25;
+    var jsonHumidNight, jsonTempNight, jsonPM10Night, jsonPM25Night;
+    var jsonHumidDay, jsonTempDay, jsonPM10Day, jsonPM25Day;
 
     switch (timeRangeValue) {
         case 1:
@@ -66,10 +66,15 @@ function createChart(chartCanvas, label) {
 
         case 2:
             labels = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'];
-            jsonHumid = jsonWeekHumid;
-            jsonTemp = jsonWeekTemp;
-            jsonPM10 = jsonWeekPM10;
-            jsonPM25 = jsonWeekPM25;
+            jsonHumidNight = jsonWeekNightHumid;
+            jsonTempNight = jsonWeekNightTemp;
+            jsonPM10Night = jsonWeekNightPM10;
+            jsonPM25Night = jsonWeekNightPM25;
+
+            jsonHumidDay = jsonWeekDayHumid;
+            jsonTempDay = jsonWeekDayTemp;
+            jsonPM10Day = jsonWeekDayPM10;
+            jsonPM25Day = jsonWeekDayPM25;
             break;
 
         case 3:
@@ -84,47 +89,91 @@ function createChart(chartCanvas, label) {
     switch (parameterValue) {
         case 1:
             data = jsonHumid;
+            dataDay = jsonHumidDay;
+            dataNight = jsonHumidNight;
             break;
 
         case 2:
             data = jsonTemp;
+            dataDay = jsonTempDay;
+            dataNight = jsonTempNight;
             break;
 
         case 3:
             data = jsonPM10;
+            dataDay = jsonPM10Day;
+            dataNight = jsonPM10Night;
             break;
 
         case 4:
             data = jsonPM25;
+            dataDay = jsonPM25Day;
+            dataNight = jsonPM25Night;
             break;
     }
 
-    return new Chart(chartCanvas, {
-        type: 'line',
-        data: {
-            datasets: [{
-                label: label,
-                data: data,
-                backgroundColor: [
-                    'rgba(10, 88, 202, 0.25)'
-                ],
-                borderColor: [
-                    'rgba(10, 88, 202, 0.75)'
-                ],
-                borderWidth: 2,
-                responsive: true,
-                maintainAspectRatio: false,
-                fill: 'origin',
-                tension: 0.5
-            }],
-            labels: labels
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
+    switch (timeRangeValue) {
+        case 2:
+            return new Chart(chartCanvas, {
+                type: "bar",
+                data: {
+                    datasets: [{
+                        /* wartosci dla dnia */
+                        data: dataDay,
+                        label: "Dzień",
+                        backgroundColor: [
+                            'rgba(245, 221, 66, 0.25)'
+                        ],
+                        borderColor: [
+                            'rgba(245, 221, 66, 0.75)'
+                        ],
+
+                    }, {
+                        /* wartosci dla nocy */
+                        data: dataNight,
+                        label: "Noc",
+                        backgroundColor: [
+                            'rgba(10, 88, 202, 0.25)'
+                        ],
+                        borderColor: [
+                            'rgba(10, 88, 202, 0.75)'
+                        ],
+                    }],
+                    labels: labels,
+                },
+                options: {
+                    scales: {},
+                },
+            });
+
+        default:
+            return new Chart(chartCanvas, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        label: label,
+                        data: data,
+                        backgroundColor: [
+                            'rgba(10, 88, 202, 0.25)'
+                        ],
+                        borderColor: [
+                            'rgba(10, 88, 202, 0.75)'
+                        ],
+                        borderWidth: 2,
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        fill: 'origin',
+                        tension: 0.5
+                    }],
+                    labels: labels
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
                 }
-            }
-        }
-    });
+            });
+    }
 }

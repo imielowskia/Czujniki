@@ -293,4 +293,35 @@ class SensorsModel
 
         return $sensors;
     }
+
+    public function getWeeklyAvgValues($parameter, $dayOrNight)
+    {
+        $data = array();
+
+        for ($day = 0; $day <= 6; $day++) {
+            $date = date('Y-m-d', strtotime('+' . (1 - date('w') + $day) . ' days'));
+            $value = $this->getDailyAvgValues($parameter, $date)[$dayOrNight];
+
+            array_push($data, $value);
+        }
+
+        return json_encode($data);
+    }
+
+    private function getDailyAvgValues($parameter, $date)
+    {
+        $queryID = "SELECT id_czujnika FROM `rejestr_czujnikow` WHERE nazwa = '$this->currentSensorName'";
+        $sensorID = $this->database->getConnection()->query($queryID)->fetch_array()[0] ?? '';
+
+        $queryFirstHalf = "SELECT $parameter FROM `dane_dzienne`
+        WHERE data BETWEEN '$date 00:00:00' AND '$date 11:00:00' AND id_czujnika = $sensorID";
+
+        $querySecondHalf = "SELECT $parameter FROM `dane_dzienne`
+        WHERE data BETWEEN '$date 11:00:00' AND '$date 23:00:00' AND id_czujnika = $sensorID";
+
+        $avgFirstHalf = $this->database->getConnection()->query($queryFirstHalf)->fetch_array()[0] ?? '';
+        $avgSecondHalf = $this->database->getConnection()->query($querySecondHalf)->fetch_array()[0] ?? '';
+
+        return array($avgFirstHalf, $avgSecondHalf);
+    }
 }
